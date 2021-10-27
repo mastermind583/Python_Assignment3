@@ -5,10 +5,48 @@
 
 import random
 from datetime import datetime
+import binascii
 
 
 def encrypt(plaintext, key):
-    print("hey")
+
+    temp_string = plaintext[0:8]
+    string_block = ""
+    for x in temp_string:
+        string_block += str(ord(x))
+    int_block = int(string_block)
+    
+    print(string_block)
+    print(int_block)
+
+
+
+
+
+
+
+'''
+
+    # convert plaintext to binary
+    bin = ''.join(format(ord(i), '08b') for i in plaintext)
+    print (bin)
+
+    ciphertext = ""
+    while bin:
+        # pad the binary plaintext with 0's
+        if len(bin) < 64:
+            while len(bin) != 64:
+                bin += '0'
+        
+        # acquire the next 64 bit block of the binary plaintext
+        block = bin[0:64]
+        print (block)
+
+        # run DES function for each block
+        #ciphertext += DES(block, key)
+
+        # remove the first 64 bits from the binary plaintext for the next loop
+        bin = bin[64:]'''
 
 def decrypt(ciphertext, key):
     print("hey")
@@ -107,14 +145,27 @@ sbox = [14, 4 , 13, 1 , 2 , 15, 11, 8 , 3 , 10, 6 , 12, 5 , 9 , 0 , 7 ,
         4 , 1 , 14, 8 , 13, 6 , 2 , 11, 15, 12, 9 , 7 , 3 , 10, 5 , 0 ,
         15, 12, 8 , 2 , 4 , 9 , 1 , 7 , 5 , 11, 3 , 14, 10, 0 , 6 , 13]
 
-plaintext = "123456ABCD132536"
-key = "AABB09182736CCDD"
+# seed random with current time
 random.seed(datetime.now())
-#ciphertext = encrypt(plaintext, key)
-#plaintext = decrypt(ciphertext, key)
 
-# get random 56 bit key
-test = (random.getrandbits(56))
-test = bin(test)[2:]
-while (len(test) < 56):
-    test += str(random.randint(0, 1))
+print ("Enter a string:")
+plaintext = input()
+while (plaintext.lower() != "exit"):
+
+    # get random 56 bit key
+    key = (random.getrandbits(56))
+    key = bin(key)[2:]
+
+    # randomly pad the key with 0's or 1's until it's 56 bits
+    # sometimes getrandbits will not give 56 bits
+    while (len(key) < 56):
+        key += str(random.randint(0, 1))
+
+    # encrypt
+    ciphertext = encrypt(plaintext, key)
+    #print ("Ciphertext = " + ciphertext)
+        
+    print ("Enter a string:")
+    plaintext = input()
+
+print("bye")
